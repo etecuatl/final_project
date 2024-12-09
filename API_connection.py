@@ -31,3 +31,4 @@ class API_connection:
         else:
             print('Failed to fetch data from the API')
         return data_ticker2
+    #testing
