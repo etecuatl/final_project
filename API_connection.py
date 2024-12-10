@@ -4,30 +4,32 @@ import pandas as pd
 
 class API_connection:
     '''This is setting up the connection to Polygon.io'''
-    def __init__(self,API_key):
-        self.API_key = API_key
-        return API_key
+    def __init__(self):
+        #api key is stored in the file erick_API_key with contents being key = ''
+        self.key = erick_API_key.key
     
-    def ticker1_connection(ticker1,start_date,end_date,key):
-        url1 = f'https://api.polygon.io/v2/aggs/ticker/{ticker1}/range/1/day/{start_date}/{end_date}?adjusted=true&sort=asc&apiKey={key}'
+    def ticker1_connection(self,ticker1,start_date1,end_date1):
+        url1 = f'https://api.polygon.io/v2/aggs/ticker/{ticker1}/range/1/day/{start_date1}/{end_date1}?adjusted=true&sort=asc&apiKey={self.key}'
         print(f'Fetching response from url.')
         response = requests.get(url1)
-        print(f'Response: {response}')
+        data = response.json()
+        print(f'Response: {data}')
         if response.status_code == 200:
             data_ticker1 = response.json()
             df = pd.DataFrame.from_dict(data_ticker1)
         else:
             print('Failed to fetch data from the API')
-        return data_ticker1
+        return df
     
-    def ticker2_connection(ticker2,start_date,end_date,key):
-        url2 = f'https://api.polygon.io/v2/aggs/ticker/{ticker2}/range/1/day/{start_date}/{end_date}?adjusted=true&sort=asc&apiKey={key}'
+    def ticker2_connection(self,ticker2,start_date2,end_date2):
+        url2 = f'https://api.polygon.io/v2/aggs/ticker/{ticker2}/range/1/day/{start_date2}/{end_date2}?adjusted=true&sort=asc&apiKey={self.key}'
         print(f'Fetching response from url.')
         response = requests.get(url2)
-        print(f'Response: {response}')
+        data = response.json()
+        print(f'Response: {data}')
         if response.status_code == 200:
             data_ticker2 = response.json()
-            df = pd.DataFrame.from_dict(data_ticker2)
+            df2 = pd.DataFrame.from_dict(data_ticker2)
         else:
             print('Failed to fetch data from the API')
-        return data_ticker2
+        return df2
