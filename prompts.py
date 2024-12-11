@@ -30,6 +30,7 @@ def valid_date_check(date):
 
 #First Ticker Set Up
 def ticker1_input():
+    """User inputs information for First Ticker."""
     while True: 
         ticker1 = input("Enter the first ticker: ").upper()
         if ticker1 in ['EXIT', 'RESTART']:
@@ -51,7 +52,7 @@ def ticker1_input():
         
 #Second Ticker Set up         
 def ticker2_input():
-    #User input and options.  User can exit at anytime. 
+    """User inputs information for Second Ticker."""
     while True: 
         ticker2 = input("Enter the second ticker: ").upper()
         if ticker2 in ['EXIT', 'RESTART']:
@@ -76,6 +77,7 @@ def chart_plot(ticker1,df1):
 
 
 def main():
+    """Main Menu and prompts user to select an option after ticker info."""
     #Notifying user option to restart or exit at any time. 
     print("IMPORTANT: TYPE 'EXIT' TO EXIT AT ANYTIME.  TYPE 'RESTART' AT ANYTIME TO BEGIN AT FIRST TICKER.")
     #initializing First ticker:
