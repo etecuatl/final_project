@@ -1,7 +1,8 @@
-import pandas as pd
-from API_connection import API_connection
-import erick_API_key
+from API_connection import Ticker_Connection
 from datetime import datetime
+import pandas as pd
+
+
 
 def exit_or_restart(input):
         """Handles Exit or Restart logic."""
@@ -35,12 +36,12 @@ def ticker1_input():
             exit_or_restart(ticker1)
 
         #Calls the valid_date_check function to check if format is correct. 
-        start_date1 = valid_date_check('start')
-        end_date1 = valid_date_check('end')
-        
+        start_date = valid_date_check('start')
+        end_date = valid_date_check('end')
+
         #Initialize Dataframe 
-        api = API_connection()
-        df1 = api.ticker1_connection(ticker1,start_date1,end_date1)
+        api = Ticker_Connection()
+        df1 = api.ticker_connection(ticker1,start_date,end_date)
         #Checking if Data is missing/ticker doesn't exist
         if df1.empty:
              print(f"No Data found for {ticker1}. Please double check date format or Ticker Name. ")
@@ -57,18 +58,22 @@ def ticker2_input():
             exit_or_restart(ticker2)
 
         #Calls the valid_date_check function to check if format is correct. 
-        start_date2 = valid_date_check('start')
-        end_date2 = valid_date_check('end')
+        start_date = valid_date_check('start')
+        end_date = valid_date_check('end')
         
         #calling API_connection class
-        api = API_connection()
-        df2 = api.ticker2_connection(ticker2,start_date2,end_date2)
+        api = Ticker_Connection()
+        df2 = api.ticker_connection(ticker2,start_date,end_date)
         #Checking if Data is missing/ticker doesn't exist
         if df2.empty:
              print(f"Invalid Data for {ticker2}. Please double check date format or Ticker Name.")
         else:
              print(f"Data for {ticker2} found.")
              return ticker2,df2
+
+def chart_plot(ticker1,df1):
+    """Plots and displays chart if user selects option 3."""
+
 
 def main():
     #Notifying user option to restart or exit at any time. 
@@ -79,16 +84,28 @@ def main():
     #initializing Second Ticker:
     ticker2,df2 = ticker2_input()
 
+    #printing results- serves as a check
+    print(f"Ticker1-{ticker1}\n"
+          f"{ticker1} Shape: {df1.shape}\n"
+          f"{df1.head(3)}")
+    print(f"Ticker2-{ticker2}\n"
+          f"{ticker2} Shape: {df2.shape}\n"
+          f"{df2.head(3)}")
+
     #main menu
     print("IMPORTANT: TYPE 'EXIT' TO EXIT AT ANYTIME.  TYPE 'RESTART' AT ANYTIME TO BEGIN AT FIRST TICKER.")
-    user_input = input(f"MAIN MENU \nPlease select your option from a list.\n"
+    user_input = input(f"MAIN MENU \nPlease select your option from this list.\n"
                         f"1. Plot {ticker1} on a chart.\n"
                         f"2. Plot {ticker2} on a chart.\n"
                         f"3. Plot both tickers on one chart.\n"
                         f"4. Add EMA on {ticker1}.\n"
                         f"5. Add EMA on {ticker2}\n"
                         f"6. Select new tickers.\n").upper()
+    
     #Error Handling options.
-    exit_or_restart(user_input)
+    if user_input in ['EXIT', 'RESTART']:
+        exit_or_restart(user_input)
+    elif user_input == '3':
+        chart_plot(ticker1,df1)
 
 main()
