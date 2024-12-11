@@ -44,5 +44,6 @@ class Ticker_Connection(API_Connection):
         return df
     
     def _url_parts(self,ticker,start_date,end_date):
+        '''Takes parameters and fills in variables in the API URL.'''
         return(f'https://api.polygon.io/v2/aggs/ticker/{ticker.upper()}/range/1/day/{start_date}/{end_date}?adjusted=true&sort=asc&apiKey={self.api_key()}')
     
