@@ -34,6 +34,10 @@ class Ticker_Connection(API_Connection):
                     #inserts and cleans data.
                     df = pd.DataFrame(results)
                     df.rename(columns={'t': 'Date', 'o': 'Open', 'h': 'High', 'l': 'Low', 'c': 'Close', 'v': 'Volume'}, inplace=True)
+                    df['Date']= pd.to_datetime(df['Date'], unit='ms')#formatting into a date. 
+                    df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
+                    df['Date'] = pd.to_datetime(df['Date']) 
+                    df.set_index('Date', inplace=True)
                     #print(df.head())
                 else:
                     print("No Results Found.")

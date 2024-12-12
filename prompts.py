@@ -1,7 +1,8 @@
 from API_connection import Ticker_Connection
 from datetime import datetime
 import pandas as pd
-
+import mplfinance as mpf
+import pandas_ta as ta
 
 
 def exit_or_restart(input):
@@ -72,9 +73,37 @@ def ticker2_input():
              print(f"Data for {ticker2} found.")
              return ticker2,df2
 
-def chart_plot(ticker1,df1):
-    """Plots and displays chart if user selects option 3."""
+def add_rsi(ticker,df,user_input):
+    """Creating the RSI Indicator"""
+    print(f"Adding RSI to {ticker}")
+    df['RSI'] = ta.rsi(df['Close'], length=14)#imports the pandas_ta library
+    rsi_plot = mpf.make_addplot(df['RSI'], panel=1, color='purple', width=1, ylabel='RSI')
+    overbought = mpf.make_addplot([70] * len(df), panel=1, color='red', width=1, linestyle='--')
+    oversold = mpf.make_addplot([30] * len(df), panel=1, color='green', width=1, linestyle='--')
+    if user_input in ['3','5']:
+        mpf.plot(df, type='candle', style='charles', title=f'Candlestick Chart for {ticker.upper()} with period=14 RSI', ylabel='Price', volume=True, addplot=[rsi_plot, overbought, oversold], panel_ratios=(3, 1))
+        return
+    return 
 
+
+def add_ema(ticker,df,user_input):
+    """Adds user input EMA"""
+    print(f"Adding EMA to {ticker}")
+    while True:
+            try:
+                ema_period=int(input("Enter desired EMA period between 5-200: "))
+                if ema_period < 5 or ema_period > 200:
+                    print("EMA out of bounds")
+                else:
+                    df['EMA'] = df['Close'].ewm(span=ema_period, adjust=False).mean()
+                    ema = mpf.make_addplot(df['EMA'], color='blue', width=1)
+                    #plotting EMA
+                    if user_input in ['4','6']:
+                        mpf.plot(df, type='candle', style='charles', title=f'Candlestick Chart for {ticker.upper()} with {ema_period} EMA',ylabel='Price', volume=True, addplot=ema) 
+                        break
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+    return df,ema_period 
 
 def main():
     """Main Menu and prompts user to select an option after ticker info."""
@@ -94,20 +123,36 @@ def main():
           f"{ticker2} Shape: {df2.shape}\n"
           f"{df2.head(3)}")
 
-    #main menu
-    print("IMPORTANT: TYPE 'EXIT' TO EXIT AT ANYTIME.  TYPE 'RESTART' AT ANYTIME TO BEGIN AT FIRST TICKER.")
-    user_input = input(f"MAIN MENU \nPlease select your option from this list.\n"
-                        f"1. Plot {ticker1} on a chart.\n"
-                        f"2. Plot {ticker2} on a chart.\n"
-                        f"3. Plot both tickers on one chart.\n"
-                        f"4. Add EMA on {ticker1}.\n"
-                        f"5. Add EMA on {ticker2}\n"
-                        f"6. Select new tickers.\n").upper()
-    
-    #Error Handling options.
-    if user_input in ['EXIT', 'RESTART']:
-        exit_or_restart(user_input)
-    elif user_input == '3':
-        chart_plot(ticker1,df1)
+    #main menu loop
+    while True:
+        print("IMPORTANT: TYPE 'EXIT' TO EXIT AT ANYTIME.  TYPE 'RESTART' AT ANYTIME TO BEGIN AT FIRST TICKER.")
+        user_input = input(f"MAIN MENU \nPlease select your option from this list.\n"
+                            f"1. Plot {ticker1} on a chart.\n"
+                            f"2. Plot {ticker2} on a chart.\n"
+                            f"3. Add RSI to {ticker1}.\n"
+                            f"4. Add EMA on {ticker1}.\n"
+                            f"5. Add RSI on {ticker2}.\n"
+                            f"6. Add EMA on {ticker2}.\n").upper()
+        
+        #Main menu selection process.
+        if user_input in ['EXIT', 'RESTART']:
+            exit_or_restart(user_input)
+        elif user_input == '1':
+            print(f"Plotting Candlestick chart for {ticker1}")
+            mpf.plot(df1, type='candle',style='charles',title=f'Candlestick Chart for {ticker1.upper()}',ylabel='Price',volume=True)
+        elif user_input == '2':
+            print(f"Plotting Candlestick chart for {ticker2}")
+            mpf.plot(df2, type='candle',style='charles',title=f'Candlestick Chart for {ticker2.upper()}',ylabel='Price',volume=True)
+        elif user_input =='3':#RSI
+            add_rsi(ticker1,df1,user_input)
+        elif user_input =='4':#EMA
+            add_ema(ticker1,df1,user_input)
+        elif user_input =='5':#RSI
+            add_rsi(ticker2,df2,user_input)
+        elif user_input == '6':#EMA
+            add_ema(ticker2,df2,user_input)
+        else: 
+            print("Invalid option.  Please select an option from the list.")
+        
 
 main()
