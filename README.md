@@ -30,7 +30,7 @@ API_Connection will check for any null values, although extremely unlikely, but 
 
 - RSI is limited to a period of 14 as this is the most widly used period.  EMA is customizable but restricted to anything greater than 5 and less than 200, as extremes will skew and yield improper results.  Recommeneded EMA are 12,26,100,200.
 
-**IMPORTANT NOTE:** Given limitations of the API, only data from 2004-present day can be downloaded. API will return code 400 if year exceeds 2004.  Due to plot limitations, an error will occur if rows retreieved are greater than 300 rows, but visualation will still plot. User will be able to zoom in and out of chart. 
+**IMPORTANT NOTE:**  Due to plot limitations, an error will occur if rows retreieved are greater than 300 rows, but visualation will still plot. User will be able to zoom in and out of chart. 
 
 ## Links:
 **pandas_ta RSI documentation:** (https://github.com/twopirllc/pandas-ta/blob/main/pandas_ta/momentum/rsi.py)
