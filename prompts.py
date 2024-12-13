@@ -6,7 +6,7 @@ import pandas_ta as ta
 
 
 def exit_or_restart(input):
-        """Handles Exit or Restart logic."""
+        """Handles Exit or Restart logic. Available at point for the user./"""
         if input == 'EXIT':
             print("Exiting....")
             exit()
@@ -19,14 +19,14 @@ def exit_or_restart(input):
 def valid_date_check(date):
     """Double checks if the date is in the correct format."""
     while True:
-        date_input = input(f"Enter a {date} date in this format 'YYYY-MM-DD': ").upper()
+        date_input = input(f"Enter a {date} date in this format 'YYYY-MM-DD' after the year 2004: ").upper()
         if date_input in ['EXIT','RESTART']:
             exit_or_restart(date_input)
         try:
             valid_date = datetime.strptime(date_input, '%Y-%m-%d')
             return valid_date.strftime('%Y-%m-%d')  
         except ValueError:
-            print("Invalid date format. Please enter date in this format: 'YYYY-MM-DD'.")
+            print("Invalid date format or year out of bounds. Please enter date in this format: 'YYYY-MM-DD'.")
         
 
 #First Ticker Set Up
@@ -41,7 +41,7 @@ def ticker1_input():
         start_date = valid_date_check('start')
         end_date = valid_date_check('end')
 
-        #Initialize Dataframe 
+        #Initialize Dataframe by calling the API_Connection class.
         api = Ticker_Connection()
         df1 = api.ticker_connection(ticker1,start_date,end_date)
         #Checking if Data is missing/ticker doesn't exist
@@ -76,8 +76,10 @@ def ticker2_input():
 def add_rsi(ticker,df,user_input):
     """Creating the RSI Indicator"""
     print(f"Adding RSI to {ticker}")
+    #creates indicator as another df.  
     df['RSI'] = ta.rsi(df['Close'], length=14)#imports the pandas_ta library
     rsi_plot = mpf.make_addplot(df['RSI'], panel=1, color='purple', width=1, ylabel='RSI')
+    #creating bounds for overbought or oversold signals. 
     overbought = mpf.make_addplot([70] * len(df), panel=1, color='red', width=1, linestyle='--')
     oversold = mpf.make_addplot([30] * len(df), panel=1, color='green', width=1, linestyle='--')
     if user_input in ['3','5']:
@@ -89,20 +91,25 @@ def add_rsi(ticker,df,user_input):
 def add_ema(ticker,df,user_input):
     """Adds user input EMA"""
     print(f"Adding EMA to {ticker}")
+    counter = 0
     while True:
-            try:
+        try:
+            if counter != '0':#adding counter for occasions where User is unable to set another RSI if desired to go back to another option
                 ema_period=int(input("Enter desired EMA period between 5-200: "))
-                if ema_period < 5 or ema_period > 200:
-                    print("EMA out of bounds")
-                else:
-                    df['EMA'] = df['Close'].ewm(span=ema_period, adjust=False).mean()
-                    ema = mpf.make_addplot(df['EMA'], color='blue', width=1)
-                    #plotting EMA
-                    if user_input in ['4','6']:
-                        mpf.plot(df, type='candle', style='charles', title=f'Candlestick Chart for {ticker.upper()} with {ema_period} EMA',ylabel='Price', volume=True, addplot=ema) 
-                        break
-            except ValueError:
-                print("Invalid input. Please enter a valid number.")
+                counter += ema_period
+            #adding restrictions to EMA as these are the most popular.  Anything less or more doesn't make sense.     
+            if ema_period < 5 or ema_period > 200:
+                print("EMA out of bounds")
+            else:
+                #creates a dataframe out of EMA and plots it if user selects option 4 or 6.
+                df['EMA'] = df['Close'].ewm(span=ema_period, adjust=False).mean()
+                ema = mpf.make_addplot(df['EMA'], color='blue', width=1)
+                #plotting EMA
+                if user_input in ['4','6']:
+                    mpf.plot(df, type='candle', style='charles', title=f'Candlestick Chart for {ticker.upper()} with {ema_period} EMA',ylabel='Price', volume=True, addplot=ema) 
+                    break
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
     return df,ema_period 
 
 def main():
