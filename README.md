@@ -33,4 +33,6 @@ API_Connection will check for any null values, although extremely unlikely, but 
 
 **mplfinance plotting documentation:** (https://github.com/matplotlib/mplfinance/blob/master/examples/addplot.ipynb)
 
+**polygon.io API documentation:88 (https://polygon.io/docs/stocks?gad_source=1&gclid=Cj0KCQiAsOq6BhDuARIsAGQ4-zgdyGHHYAzBPQb40HaG_fqYcH8fMdxHZJ4p-9Q1rwHgzJsV8ZkbWDUaAgWrEALw_wcB#getting-started?utm_term=stock%20rest%20api&utm_campaign=Stocks+-+USA&utm_source=adwords&utm_medium=ppc&hsa_acc=4299129556&hsa_cam=1330311037&hsa_grp=133850757806&hsa_ad=591207294400&hsa_src=g&hsa_tgt=aud-896761709510:kwd-833268776823&hsa_kw=stock%20rest%20api&hsa_mt=p&hsa_net=adwords&hsa_ver=3/getting-started)
+
 ### polygon.io KEY REQUIRED BEFORE USE 
