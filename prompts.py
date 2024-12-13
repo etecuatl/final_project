@@ -19,14 +19,14 @@ def exit_or_restart(input):
 def valid_date_check(date):
     """Double checks if the date is in the correct format."""
     while True:
-        date_input = input(f"Enter a {date} date in this format 'YYYY-MM-DD' after the year 2004: ").upper()
+        date_input = input(f"Enter a {date} date in this format 'YYYY-MM-DD': ").upper()
         if date_input in ['EXIT','RESTART']:
             exit_or_restart(date_input)
         try:
             valid_date = datetime.strptime(date_input, '%Y-%m-%d')
             return valid_date.strftime('%Y-%m-%d')  
         except ValueError:
-            print("Invalid date format or year out of bounds. Please enter date in this format: 'YYYY-MM-DD'.")
+            print("Invalid date format. Please enter date in this format: 'YYYY-MM-DD'.")
         
 
 #First Ticker Set Up
